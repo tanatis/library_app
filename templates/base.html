@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        nav ul {list-style: none; display: flex; gap: 2rem;}
+    </style>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<header>
+    <nav>
+        <ul>
+            <li><a href="{% url 'index' %}">Home</a></li>
+            <li><a href="{% url 'user register' %}">Register</a></li>
+            <li><a href="{% url 'user login' %}">Login</a></li>
+            <li><a href="{% url 'user logout' %}">Logout</a></li>
+        </ul>
+    </nav>
+</header>
+
+{% block page_content %}
+{% endblock %}
+
+</body>
+</html>
