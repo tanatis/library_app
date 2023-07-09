@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block page_content %}
+
+
+    <div>
+    {% for borrow in borrows %}
+    <p>{{ borrow.book.title }} by {{ borrow.user.username }} - {{ borrow.return_date }} | <a href="{% url 'borrow delete' pk=borrow.pk %}">Mark returned</a></p>
+    {% endfor %}
+    </div>
+{% endblock %}

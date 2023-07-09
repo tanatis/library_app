@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block page_content %}
+<div>
+    <form action="{% url 'author create' %}" method="post">
+        {% for field in form %}
+            <div>
+                {{ field.errors }}
+                {{ field.label_tag }}
+                {{ field }}
+            </div>
+        {% endfor %}
+        {% csrf_token %}
+        <button type="submit">Create</button>
+    </form>
+</div>
+{% endblock %}

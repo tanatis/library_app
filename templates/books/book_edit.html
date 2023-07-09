@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block page_content %}
+<h1>Edit book:</h1>
+    <form action="{% url 'edit books' pk=book.pk %}" method="post">
+    {{ form.as_p }}
+    {% csrf_token %}
+        <button type="submit">Edit book</button>
+    </form>
+{% endblock %}

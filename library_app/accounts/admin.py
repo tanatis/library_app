@@ -2,8 +2,6 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 
-from library_app.accounts.forms import AppUserCreationForm
-
 UserModel = get_user_model()
 
 

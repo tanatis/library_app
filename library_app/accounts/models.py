@@ -1,8 +1,13 @@
 from django.contrib.auth.models import UserManager
+from django.core.validators import MinLengthValidator
 from django.db import models
-from django.contrib.auth import models as auth_models
+from django.contrib.auth import models as auth_models, get_user_model
 from django.utils import timezone
 
+from library_app.core.validators import username_validator, only_letters_validator, max_image_size_validator
+
+
+#UserModel = get_user_model()
 
 # class AppUserManager(auth_models.BaseUserManager):
 #     use_in_migrations = True
@@ -43,6 +48,7 @@ class AppUser(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):
         unique=True,
         blank=False,
         null=False,
+        validators=(MinLengthValidator(3), username_validator)
     )
     email = models.EmailField(
         unique=True,
@@ -63,3 +69,43 @@ class AppUser(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):
     )
 
     # profile -> video 3:02:30
+
+
+class Profile(models.Model):
+    first_name = models.CharField(
+        blank=True,
+        null=True,
+        max_length=30,
+        validators=(MinLengthValidator(2), only_letters_validator)
+    )
+
+    last_name = models.CharField(
+        blank=True,
+        null=True,
+        max_length=30,
+        validators=(MinLengthValidator(2), only_letters_validator)
+    )
+
+    gender = models.CharField(
+        blank=True,
+        null=True,
+        max_length=6,
+        choices=(
+            ('male', 'Male'),
+            ('female', 'Female'),
+            ('hidden', 'Hidden'),
+        )
+    )
+
+    profile_image = models.ImageField(
+        blank=True,
+        null=True,
+        upload_to='profile-images/',
+        validators=(max_image_size_validator,),
+    )
+
+    user = models.OneToOneField(
+        AppUser,
+        on_delete=models.CASCADE,
+        primary_key=True,  # pk на UserModel става pk на Profile (т.е. Profile вече няма pk в базата)
+    )

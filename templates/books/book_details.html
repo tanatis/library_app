@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block page_content %}
+    {% if request.user.is_staff %}
+    <span><a href="{% url 'edit books' pk=book.pk %}">Edit</a></span>
+    {% endif %}
+    <h1>{{ book.title }}</h1>
+    <h2>Author: {{ book.author }}</h2>
+    <h2>Genre: {{ book.genre }}</h2>
+    <p>{{ book.description }}</p>
+    {% if book.availability > 0 %}
+        <a href="{% url 'borrow book' book_pk=book.pk %}">Borrow book</a>
+    {% else %}
+        Not available
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block page_content %}
+
+    {% if object.pk == request.user.pk %}
+        <p><a href="{% url 'profile edit' pk=object.pk %}">Edit profile</a></p>
+    {% endif %}
+    {% if not object.profile_image %}
+        <img src="{% static 'default-profile-picture.jpg' %}" alt="">
+    {% else %}
+        <img src="/media/{{ object.profile_image }}" width="150px" alt="">
+    {% endif %}
+    <ul>
+        <li>Name: {{ object.first_name }} {{ object.last_name }}</li>
+        <li>Gender: {{ object.gender }}</li>
+    </ul>
+    <hr>
+    {% for borrow in borrowed_books %}
+    <li>{{ borrow.book.title }} by {{ borrow.book.author }}<br>Return before {{ borrow.return_date }}</li>
+  {% empty %}
+    <li>No books borrowed.</li>
+  {% endfor %}
+{% endblock %}
