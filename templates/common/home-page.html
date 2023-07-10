@@ -1,17 +1,18 @@
 {% extends 'base.html' %}
 {% block page_content %}
-<h1>Home Page</h1>
+    <h1>Home Page</h1>
     {{ request.user }}
-    <ul>
-    Books list:
-    {% for book in books %}
-    <li>
-    <p>title: <a href="{% url 'details books' pk=book.pk %}">{{ book.title }}</a></p>
-    <p>descr: {{ book.description }}</p>
-    <p>genre: {{ book.genre }}</p>
-    <p>author: {{ book.author }}</p>
-    <p>available: {{ book.availability }}</p>
-    </li>
-    {% endfor %}
+    <ul class="book-list">
+        {% for book in books %}
+            <li>
+                <a href="{% url 'details books' pk=book.pk %}">{{ book.title }}
+                    <img src="/media/{{ book.cover }}" alt="{{ book.title }} by {{ book.author }}" width="200">
+                </a>
+                <p>descr: {{ book.description }}</p>
+                <p>genre: {{ book.genre }}</p>
+                <p>author: {{ book.author }}</p>
+                <p>available: {{ book.availability }}</p>
+            </li>
+        {% endfor %}
     </ul>
 {% endblock %}

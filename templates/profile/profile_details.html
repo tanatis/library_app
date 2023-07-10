@@ -11,6 +11,7 @@
         <img src="/media/{{ object.profile_image }}" width="150px" alt="">
     {% endif %}
     <ul>
+        <li>Username: {{ object.user.username }}</li>
         <li>Name: {{ object.first_name }} {{ object.last_name }}</li>
         <li>Gender: {{ object.gender }}</li>
     </ul>

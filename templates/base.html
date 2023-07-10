@@ -7,6 +7,10 @@
             display: flex;
             gap: 2rem;
         }
+        .book-list {
+            list-style: none;
+            display: flex;
+        }
     </style>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -34,6 +38,7 @@
             <li><a href="{% url 'author create' %}">Add Author</a></li>
             <li><a href="{% url 'all authors' %}">List Authors</a></li>
             <li><a href="{% url 'add books' %}">Add Book</a></li>
+            <li><a href="{% url 'borrow list' %}">Borrows</a></li>
         </ul>
         {% endif %}
     </nav>

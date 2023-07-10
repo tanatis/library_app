@@ -3,7 +3,7 @@
     <ul>
         All Authors:
         {% for author in authors %}
-            <li><a href="{% url 'author details' pk=author.pk %}">{{ author.name }}</a></li>
+            <li><a href="{% url 'author details' pk=author.pk %}">{{ author.name }}</a> - {{ author.book_set.count }} books</li>
         {% endfor %}
     </ul>
 {% endblock %}

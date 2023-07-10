@@ -1,7 +1,9 @@
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django_countries.fields import CountryField
 
-from library_app.core.validators import max_image_size_validator
+from library_app.core.validators import max_image_size_validator, author_birth_death_year_validator, \
+    author_name_validator
 
 
 class Author(models.Model):
@@ -9,7 +11,7 @@ class Author(models.Model):
         max_length=50,
         null=False,
         blank=False,
-        # TODO: validate name
+        validators=(author_name_validator,),
     )
 
     bio = models.TextField(
@@ -22,23 +24,24 @@ class Author(models.Model):
         blank=False,
     )
 
-    # TODO: Years only
-    # birth_date = models.DateField(
-    #     blank=False,
-    #     null=False,
-    # )
-    #
-    # death_date = models.DateField(
-    #     blank=True,
-    #     null=True,
-    # )
+    birth_year = models.PositiveIntegerField(
+        blank=False,
+        null=False,
+        validators=(author_birth_death_year_validator,),
+    )
 
-    # picture = models.ImageField(
-    #     blank=True,
-    #     null=True,
-    #     upload_to='author-images',
-    #     validators=(max_image_size_validator,),
-    # )
+    death_year = models.PositiveIntegerField(
+        blank=True,
+        null=True,
+        validators=(author_birth_death_year_validator,),
+    )
+
+    picture = models.ImageField(
+        blank=True,
+        null=True,
+        upload_to='author-images',
+        validators=(max_image_size_validator,),
+    )
 
     def __str__(self):
         return self.name

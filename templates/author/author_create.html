@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block page_content %}
 <div>
-    <form action="{% url 'author create' %}" method="post">
+    <form action="{% url 'author create' %}" method="post" enctype="multipart/form-data">
         {% for field in form %}
             <div>
                 {{ field.errors }}

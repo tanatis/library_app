@@ -3,8 +3,12 @@
 
 
     <div>
-    {% for borrow in borrows %}
-    <p>{{ borrow.book.title }} by {{ borrow.user.username }} - {{ borrow.return_date }} | <a href="{% url 'borrow delete' pk=borrow.pk %}">Mark returned</a></p>
-    {% endfor %}
+    {% if borrows %}
+        {% for borrow in borrows %}
+            <p>{{ borrow.book.title }} by {{ borrow.user.username }} - {{ borrow.return_date }} | <a href="{% url 'borrow delete' pk=borrow.pk %}">Mark returned</a></p>
+        {% endfor %}
+    {% else %}
+        <p>There are no books borrowed!</p>
+    {% endif %}
     </div>
 {% endblock %}

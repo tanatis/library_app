@@ -57,16 +57,22 @@ class Book(models.Model):
         default=1,
     )
 
+    cover = models.ImageField(
+        blank=False,
+        null=False,
+        validators=(max_image_size_validator,),
+        upload_to='book-covers'
+    )
+
+    number_of_pages = models.PositiveIntegerField(
+        blank=False,
+        null=False,
+    )
+
     author = models.ForeignKey(
         Author,
         on_delete=models.CASCADE,
     )
-
-    # cover = models.ImageField(
-    #     blank=False,
-    #     null=False,
-    #     validators=(max_image_size_validator,)
-    # )
 
     # publisher = models.ForeignKey(
     #     Publisher,

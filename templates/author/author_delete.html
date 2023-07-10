@@ -1,4 +1,12 @@
 {% extends 'base.html' %}
 {% block page_content %}
-
+<div>
+    <form action="{% url 'author delete' pk=author.pk %}" method="post">
+        <p>By deleting {{ author.name }} you will also delete all his/her books</p>
+        <h2>Are you sure you want to delete "{{ author.name }}" ?</h2>
+        {{ form }}
+        {% csrf_token %}
+        <button type="submit">Delete author</button>
+    </form>
+</div>
 {% endblock %}

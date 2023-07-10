@@ -13,7 +13,10 @@ SECRET_KEY = 'django-insecure-hqltl*#^!vbl$x_xyy2wgh_z@ed)n&2err^rn#9)_$ol2z6*6x
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+]
 
 
 # Application definition
@@ -33,6 +36,7 @@ INSTALLED_APPS = [
     'library_app.author',
     'library_app.book',
     'library_app.borrow',
+    'library_app.comments',
 ]
 
 MIDDLEWARE = [

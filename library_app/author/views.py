@@ -3,8 +3,9 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import generic as views
 
-from library_app.author.forms import AuthorEditForm
+from library_app.author.forms import AuthorEditForm, AuthorDeleteForm
 from library_app.author.models import Author
+from library_app.core.functionality import get_creator_user
 
 
 def author_create(request):
@@ -14,7 +15,7 @@ def author_create(request):
 class AuthorCreateView(views.CreateView):
     model = Author
     template_name = 'author/author_create.html'
-    fields = ('name', 'bio', 'nationality',)
+    fields = ('name', 'birth_year', 'death_year', 'nationality', 'bio', 'picture')
     success_url = reverse_lazy('index')
 
     # Access only to Creators
@@ -25,7 +26,7 @@ class AuthorCreateView(views.CreateView):
 
 
 @login_required
-@user_passes_test(lambda user: user.groups.filter(name='Creator').exists(), login_url='restricted')
+@user_passes_test(get_creator_user, login_url='restricted')
 def author_edit(request, pk):
     author = Author.objects.filter(pk=pk).get()
     form = AuthorEditForm(request.POST or None, instance=author)
@@ -40,15 +41,25 @@ def author_edit(request, pk):
 
 
 def author_details(request, pk):
+    author = Author.objects.filter(pk=pk).get()
     context = {
-        'author': Author.objects.filter(pk=pk).get()
+        'author': author,
+        'author_books': author.book_set.all(),
     }
     return render(request, 'author/author_details.html', context)
 
 
 def author_delete(request, pk):
-    # TODO: Author delete
-    return render(request, 'author/author_delete.html')
+    author = Author.objects.filter(pk=pk).get()
+    form = AuthorDeleteForm(request.POST or None, instance=author)
+    if form.is_valid():
+        form.save()
+        return redirect('index')
+    context = {
+        'form': form,
+        'author': author,
+    }
+    return render(request, 'author/author_delete.html', context)
 
 
 def list_authors(request):

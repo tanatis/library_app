@@ -1,8 +1,9 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect
 
-from library_app.book.forms import BookCreateForm
+from library_app.book.forms import BookCreateForm, BookEditForm
 from library_app.book.models import Book
+from library_app.core.functionality import get_creator_user
 
 
 def list_books(request):
@@ -20,12 +21,15 @@ def book_details(request, pk):
 
 
 @login_required
-@user_passes_test(lambda user: user.groups.filter(name='Creator').exists(), login_url='restricted')
+@user_passes_test(get_creator_user, login_url='restricted')
 def book_add(request):
-    form = BookCreateForm(request.POST or None)
-    if form.is_valid():
-        form.save()
-        return redirect('index')
+    if request.method == 'GET':
+        form = BookCreateForm()
+    else:
+        form = BookCreateForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
 
     context = {
         'form': form,
@@ -34,13 +38,16 @@ def book_add(request):
 
 
 @login_required
-@user_passes_test(lambda user: user.groups.filter(name='Creator').exists(), login_url='restricted')
+@user_passes_test(get_creator_user, login_url='restricted')
 def book_edit(request, pk):
     book = Book.objects.filter(pk=pk).get()
-    form = BookCreateForm(request.POST or None, instance=book)
-    if form.is_valid():
-        form.save()
-        return redirect('all books')
+    if request.method == 'GET':
+        form = BookEditForm(instance=book)
+    else:
+        form = BookEditForm(request.POST, request.FILES, instance=book)
+        if form.is_valid():
+            form.save()
+            return redirect('all books')
     context = {
         'form': form,
         'book': book,

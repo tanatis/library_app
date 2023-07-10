@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils import timezone
 
 from django.contrib.auth import get_user_model
@@ -6,10 +7,13 @@ from django.shortcuts import render, redirect
 from library_app.book.models import Book
 from library_app.borrow.forms import BorrowBookForm
 from library_app.borrow.models import Borrow
+from library_app.core.functionality import get_creator_user
 
 UserModel = get_user_model()
 
 
+@login_required
+@user_passes_test(get_creator_user, login_url='restricted')
 def borrow_list(request):
     borrows = Borrow.objects.all()
     return render(request, 'common/borrow_list.html', {'borrows': borrows})
@@ -76,6 +80,9 @@ def borrow_book(request, book_pk):
     else:
         return redirect('index')
 
+
+@login_required
+@user_passes_test(get_creator_user, login_url='restricted')
 def borrow_delete(request, pk):
     borrow = Borrow.objects.filter(pk=pk).get()
 

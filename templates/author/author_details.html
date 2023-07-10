@@ -2,11 +2,20 @@
 {% block page_content %}
 
     <ul>
-    <li>Name: {{ author.name }}</li>
-    <li>Nationality: {{ author.nationality }}</li>
-    <li>Bio: {{ author.bio }}</li>
+        <li>Name: {{ author.name }}</li>
+        <li>Nationality: {{ author.nationality }}</li>
+        <li>Bio: {{ author.bio }}</li>
+        {% if request.user.is_authenticated and request.user.is_staff %}
+            <li>
+                <a href="{% url 'author edit' pk=author.pk %}">Edit</a> | <a href="{% url 'author delete' pk=author.pk %}">Delete</a>
+            </li>
+        {% endif %}
     </ul>
+
+    {% for book in author_books %}
+        {{ book.title }}
+    {% endfor %}
     {#  if stuff  #}
-    <a href="{% url 'author edit' pk=author.pk %}">Edit</a>
+
     {# endif #}
 {% endblock %}
