@@ -24,7 +24,7 @@
                 <div class="book-details-right">
                     <div class="book-details">
                         <h1>{{ book.title }}</h1>
-                        <p><span>Autor:</span> {{ book.author }}</p>
+                        <p><span>Autor:</span> <a href="{% url 'author details' pk=book.author.pk %}">{{ book.author }}</a></p>
                         <p><span>Genre:</span> {{ book.genre }}</p>
                         <p><span>Pages:</span> {{ book.number_of_pages }}</p>
                         <p><span>Description:</span> {{ book.description }}</p>

@@ -1,15 +1,24 @@
 {% extends 'base.html' %}
+{% load placeholders %}
 {% block page_content %}
 
     <div class="lib-form">
         <h2>Login form</h2>
         <form action="{% url 'user login' %}" method="post">
-            {% for field in form %}
-                <div class="lib-form-line">
-                {{ field.error }}
-                {{ field }}
-                </div>
-            {% endfor %}
+            {#            {% for field in form %}#}
+            {#                <div class="lib-form-line">#}
+            {#                {{ field.error }}#}
+            {#                {{ field }}#}
+            {#                </div>#}
+            {#            {% endfor %}#}
+            <div class="lib-form-line">
+                {{ form.username.error }}
+                {{ form.username|placeholder:'Username'|form_field_class:'lib-form-input' }}
+            </div>
+            <div class="lib-form-line">
+                {{ form.password.error }}
+                {{ form.password|placeholder:'Password'|form_field_class:'lib-form-input' }}
+            </div>
             <button class="lib-form-btn">Login</button>
             {% csrf_token %}
         </form>

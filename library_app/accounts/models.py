@@ -19,12 +19,14 @@ class AppUser(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):
         unique=True,
         blank=False,
         null=False,
-        validators=(MinLengthValidator(3), username_validator)
+        validators=(MinLengthValidator(3), username_validator),
+        #error_messages='This username is already taken'
     )
     email = models.EmailField(
         unique=True,
         null=False,
         blank=False,
+        #error_messages='User with this email already exists.'
     )
 
     is_staff = models.BooleanField(

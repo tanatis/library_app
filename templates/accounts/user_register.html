@@ -1,15 +1,39 @@
 {% extends 'base.html' %}
+{% load placeholders %}
 {% block page_content %}
     <div class="lib-form">
-    <h2>Registration form</h2>
+        <h2>Registration form</h2>
         <form action="{% url 'user register' %}" method="post">
-            {% for field in form %}
-                <div class="lib-form-line">
-                    {{ field.errors }}
-                    {{ field }}
-                    {{ field.help_text }}
-                </div>
-            {% endfor %}
+{#            {% for field in form %}#}
+{#                <div class="lib-form-line">#}
+{#                    {{ field.errors }}#}
+{#                    {{ field }}#}
+{#                    {{ field.help_text }}#}
+{#                </div>#}
+{#            {% endfor %}#}
+            <div class="lib-form-line">
+                {{ form.username.errors }}
+                {{ form.username|placeholder:'Username:'|form_field_class:'lib-form-input' }}
+                {{ form.username.help_text }}
+            </div>
+            <div class="lib-form-line">
+                {{ form.email.errors }}
+                {{ form.email|placeholder:'Email:'|form_field_class:'lib-form-input' }}
+                {{ form.email.help_text }}
+            </div>
+            <div class="lib-form-line">
+                {{ form.password1.errors }}
+                {{ form.password1|placeholder:'Password:'|form_field_class:'lib-form-input' }}
+                {{ form.password1.help_text }}
+            </div>
+            <div class="lib-form-line">
+                {{ form.password2.errors }}
+                {{ form.password2|placeholder:'Confirm password:'|form_field_class:'lib-form-input' }}
+            </div>
+            <div class="lib-form-line">
+                {{ form.consent }}
+                {{ form.consent.help_text }}
+            </div>
             {% csrf_token %}
             <button class="lib-form-btn">Register</button>
         </form>

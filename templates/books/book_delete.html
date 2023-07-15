@@ -2,7 +2,7 @@
 {% block page_content %}
     <div class="lib-delete-book">
         <form action="{% url 'delete books' pk=book.pk %}" method="post">
-            <h2>Are you sure you want to delete <u>{{ book.title }}</u> ?</h2>
+            <h2>Are you sure you want to delete "<u>{{ book.title }}</u>" ?</h2>
             <img src="/media/{{ book.cover }}" alt="{{ book.title }}"><br>
             {{ form }}
             <button class="lib-form-btn" type="submit">Delete book</button>

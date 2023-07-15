@@ -16,7 +16,7 @@
                 <div class="profile-details-right">
                     <div class="profile-details">
                         <p><span>Username:</span> {{ object.user.username }}</p>
-                        <p><span>Name:</span> {{ object.first_name }}</p>
+                        <p><span>Name:</span> {{ object.first_name }} {{ object.last_name }}</p>
                         <p><span>Gender:</span> {{ object.gender }}</p>
                         {% if object.pk == request.user.pk %}
                         <p><a href="{% url 'profile edit' pk=object.pk %}">Edit profile</a></p>

@@ -33,6 +33,7 @@ class Author(models.Model):
     death_year = models.IntegerField(
         blank=True,
         null=True,
+        validators=(author_birth_death_year_validator,),
     )
 
     picture = models.ImageField(
