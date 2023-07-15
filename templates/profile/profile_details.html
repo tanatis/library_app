@@ -2,23 +2,50 @@
 {% load static %}
 {% block page_content %}
 
-    {% if object.pk == request.user.pk %}
-        <p><a href="{% url 'profile edit' pk=object.pk %}">Edit profile</a></p>
-    {% endif %}
-    {% if not object.profile_image %}
-        <img src="{% static 'default-profile-picture.jpg' %}" alt="">
-    {% else %}
-        <img src="/media/{{ object.profile_image }}" width="150px" alt="">
-    {% endif %}
-    <ul>
-        <li>Username: {{ object.user.username }}</li>
-        <li>Name: {{ object.first_name }} {{ object.last_name }}</li>
-        <li>Gender: {{ object.gender }}</li>
-    </ul>
-    <hr>
-    {% for borrow in borrowed_books %}
-    <li>{{ borrow.book.title }} by {{ borrow.book.author }}<br>Return before {{ borrow.return_date }}</li>
-  {% empty %}
-    <li>No books borrowed.</li>
-  {% endfor %}
+    <section class="bg-sand">
+        <div class="container">
+            <div class="lib-profile-details-wrapper">
+                <div class="profile-details-left">
+                    {% if not object.profile_image %}
+                        <img src="{% static 'default-profile-picture.jpg' %}" alt="{{ object.user.username }}">
+                    {% else %}
+                        <img src="/media/{{ object.profile_image }}" alt="{{ object.user.username }}">
+                    {% endif %}
+                </div>
+
+                <div class="profile-details-right">
+                    <div class="profile-details">
+                        <p><span>Username:</span> {{ object.user.username }}</p>
+                        <p><span>Name:</span> {{ object.first_name }}</p>
+                        <p><span>Gender:</span> {{ object.gender }}</p>
+                        {% if object.pk == request.user.pk %}
+                        <p><a href="{% url 'profile edit' pk=object.pk %}">Edit profile</a></p>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div class="books-list">
+    <h2>List of borrowed books:</h2>
+        <div class="products-grid grid">
+            {% for borrow in borrowed_books %}
+                <figure class="product-style">
+                    <a href="{% url 'details books' pk=borrow.book.pk %}">
+                        <img src="/media/{{ borrow.book.cover }}" alt="{{ borrow.title }}" class="product-item">
+                        <figcaption>
+                            <h3>{{ borrow.title }}</h3>
+                            <p>{{ borrow.author }}</p>
+                            <p>Return before {{ borrow.return_date }}</p>
+                        </figcaption>
+                    </a>
+                </figure>
+            {% empty %}
+            <h3>No books borrowed yet</h3>
+            {% endfor %}
+        </div>
+    </div>
+
 {% endblock %}

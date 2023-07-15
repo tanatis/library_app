@@ -1,51 +1,140 @@
+{% load static %}
+{% url 'index' as index %}
+{% url 'author create' as add_author %}
+{% url 'all authors' as list_authors %}
+{% url 'add books' as add_book %}
+{#{% url 'borrow list' as borrows %}#}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <style>
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 2rem;
-        }
-        .book-list {
-            list-style: none;
-            display: flex;
-        }
-    </style>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Book Store</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="author" content="">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/normalize.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'icomoon/icomoon.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/vendor.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
+    <!-- script
+    ================================================== -->
+    <script src="{% static 'js/modernizr.js' %}"></script>
+
 </head>
+
 <body>
-<header>
-    <nav>
-        <ul>
-            <li><a href="{% url 'index' %}">Home</a></li>
-            {% if request.user.is_authenticated %}
-                {% if not request.user.profile.first_name or not request.user.profile.last_name or not request.user.profile.gender %}
-                    <li><a href="{% url 'profile edit' request.user.pk %}">Complete Your Profile</a></li>
-                {% else %}
-                    <li><a href="{% url 'profile details' request.user.pk %}">Profile</a></li>
-                {% endif %}
-                <li><a href="{% url 'user logout' %}">Logout</a></li>
-            {% else %}
-                <li><a href="{% url 'user register' %}">Register</a></li>
-                <li><a href="{% url 'user login' %}">Login</a></li>
-            {% endif %}
-        </ul>
-        {# TODO: display if user is staff only  #}
-        {% if user.is_staff %}
-        <ul>
-            <li><a href="{% url 'author create' %}">Add Author</a></li>
-            <li><a href="{% url 'all authors' %}">List Authors</a></li>
-            <li><a href="{% url 'add books' %}">Add Book</a></li>
-            <li><a href="{% url 'borrow list' %}">Borrows</a></li>
-        </ul>
-        {% endif %}
-    </nav>
-</header>
+
+
+<div id="header-wrap">
+    {% if user.is_staff %}
+        <!-- admin content -->
+        <div class="top-content">
+            <div class="container">
+                <div class="row admin-menu">
+                    <div class="col-md-6">
+                        <div class="right-element admin-menu">
+                            <a {% if request.path == add_author %}class="active"{% endif %} href="{% url 'author create' %}">Add Author</a>
+                            <a {% if request.path == list_authors %}class="active"{% endif %} href="{% url 'all authors' %}">List Authors</a>
+                            <a {% if request.path == add_book %}class="active"{% endif %} href="{% url 'add books' %}">Add Book</a>
+                            <a {% if request.path == borrows %}class="active"{% endif %} href="{% url 'borrow list' %}">Borrows</a>
+                        </div><!--top-right-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end admin content-->
+    {% endif %}
+
+    <header id="header">
+        <div class="container">
+            <div class="lib-header">
+                <div class="lib-logo">
+                    <div class="main-logo">
+                        <a href="{% url 'index' %}"><img src="{% static 'images/lib-logo.png' %}" alt="Library App"></a>
+                    </div>
+                </div>
+                <div class="lib-nav">
+                    <nav id="navbar">
+                        <div class="main-menu stellarnav">
+                            <ul class="menu-list">
+                                <li class="menu-item {% if request.path == index %}active{% endif %}"><a href="{% url 'index' %}" data-effect="Home">Home</a></li>
+                                {% if request.user.is_authenticated %}
+                                    <li class="menu-item {% if request.path == profile_details %}active{% endif %}">
+                                        {% if not request.user.profile.first_name or not request.user.profile.last_name or not request.user.profile.gender %}
+                                            <span class="lib-profile">Complete your profile!</span>
+                                        {% endif %}
+                                        <a href="{% url 'profile details' request.user.pk %}">Profile</a>
+                                    </li>
+                                    <li class="menu-item"><a href="{% url 'user logout' %}">Logout</a></li>
+                                {% else %}
+                                    <li class="menu-item"><a href="{% url 'user register' %}">Register</a></li>
+                                    <li class="menu-item"><a href="{% url 'user login' %}">Login</a></li>
+                                {% endif %}
+                            </ul>
+                            <div class="hamburger">
+                                <span class="bar"></span>
+                                <span class="bar"></span>
+                                <span class="bar"></span>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+
+</div><!--header-wrap-->
+{# ########################################################################################################### #}
 
 {% block page_content %}
 {% endblock %}
 
+{# ########################################################################################################### #}
+<div id="footer-bottom">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="copyright">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p>© 2022 All rights reserved. Free HTML Template by <a
+                                    href="https://www.templatesjungle.com/" target="_blank">TemplatesJungle</a></p>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="social-links align-right">
+                                <ul>
+                                    <li>
+                                        <a href="#"><i class="icon icon-facebook"></i></a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="icon icon-twitter"></i></a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="icon icon-youtube-play"></i></a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="icon icon-behance-square"></i></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div><!--grid-->
+            </div><!--footer-bottom-content-->
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/jquery-1.11.0.min.js' %}"></script>
+<script src="{% static 'js/plugins.js' %}"></script>
+<script src="{% static 'js/script.js' %}"></script>
+
 </body>
-</html>
+</html>	

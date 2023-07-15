@@ -1,8 +1,10 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.core.exceptions import ValidationError
 from django.shortcuts import render, redirect
-
-from library_app.book.forms import BookCreateForm, BookEditForm
+from django.contrib import messages
+from library_app.book.forms import BookCreateForm, BookEditForm, BookDeleteForm
 from library_app.book.models import Book
+from library_app.comments.forms import CommentForm
 from library_app.core.functionality import get_creator_user
 
 
@@ -12,9 +14,13 @@ def list_books(request):
 
 def book_details(request, pk):
     book = Book.objects.filter(pk=pk).get()
+    comment_form = CommentForm()
+
     context = {
         'book': book,
         'book_pk': book.pk,
+        "comments": book.comment_set.all(),
+        "comment_form": comment_form,
     }
 
     return render(request, 'books/book_details.html', context)
@@ -53,3 +59,24 @@ def book_edit(request, pk):
         'book': book,
     }
     return render(request, 'books/book_edit.html', context)
+
+
+def book_delete(request, pk):
+    book = Book.objects.filter(pk=pk).get()
+    if book.borrowed_count == 0:
+        if request.method == 'GET':
+            form = BookDeleteForm(instance=book)
+        else:
+            form = BookDeleteForm(request.POST, instance=book)
+            if form.is_valid():
+                form.save()
+                return redirect('index')
+    else:
+        messages.warning(request, "Book cannot be delete before it is returned")
+        return redirect('restricted')
+        #return redirect('restricted')  # TODO: change redirect url
+    context = {
+        'book': book,
+        'form': form,
+    }
+    return render(request, 'books/book_delete.html', context)

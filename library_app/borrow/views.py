@@ -1,5 +1,7 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.http import HttpResponse
 from django.utils import timezone
+from django.contrib import messages
 
 from django.contrib.auth import get_user_model
 from django.shortcuts import render, redirect
@@ -47,6 +49,7 @@ def borrow_list(request):
 #     else:
 #         return redirect('index')
 
+@login_required
 def borrow_book(request, book_pk):
     book = Book.objects.filter(pk=book_pk).get()
 
@@ -59,14 +62,21 @@ def borrow_book(request, book_pk):
             form = BorrowBookForm(request.POST)
 
             if form.is_valid():
+                user = request.user
+                # Check if the user has already borrowed the same book
+                if Borrow.objects.filter(user=user, book=book, return_date__gte=borrow_date).exists():
+                    messages.warning(request, "You have already borrowed this book.")
+                    return redirect('restricted')
+
                 new_borrow = form.save(commit=False)
                 new_borrow.borrow_date = borrow_date
                 new_borrow.return_date = return_date
-                new_borrow.user = request.user
+                new_borrow.user = user
                 new_borrow.book = book
                 new_borrow.save()
 
                 book.availability -= 1
+                book.borrowed_count += 1
                 book.save()
 
                 return redirect('index')
@@ -78,7 +88,7 @@ def borrow_book(request, book_pk):
         }
         return render(request, 'common/borrow.html', context)
     else:
-        return redirect('index')
+        return redirect('restricted')
 
 
 @login_required
@@ -88,6 +98,7 @@ def borrow_delete(request, pk):
 
     book = borrow.book
     book.availability += 1
+    book.borrowed_count -= 1
     book.save()
     borrow.delete()
     return redirect('borrow list')

@@ -10,6 +10,7 @@ urlpatterns = [
     path('authors/', include('library_app.author.urls')),
     path('books/', include('library_app.book.urls')),
     path('borrow/', include('library_app.borrow.urls')),
+    path('comment/', include('library_app.comments.urls')),
 ]
 
 if settings.DEBUG:

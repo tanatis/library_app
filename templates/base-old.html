@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+        .book-list {
+            list-style: none;
+            display: flex;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<header>
+    <nav>
+        <ul>
+            <li><a href="{% url 'index' %}">Home</a></li>
+            {% if request.user.is_authenticated %}
+                {% if not request.user.profile.first_name or not request.user.profile.last_name or not request.user.profile.gender %}
+                    <li><a href="{% url 'profile edit' request.user.pk %}">Complete Your Profile</a></li>
+                {% else %}
+                    <li><a href="{% url 'profile details' request.user.pk %}">Profile</a></li>
+                {% endif %}
+                <li><a href="{% url 'user logout' %}">Logout</a></li>
+            {% else %}
+                <li><a href="{% url 'user register' %}">Register</a></li>
+                <li><a href="{% url 'user login' %}">Login</a></li>
+            {% endif %}
+        </ul>
+        {# TODO: display if user is staff only  #}
+        {% if user.is_staff %}
+        <ul>
+            <li><a href="{% url 'author create' %}">Add Author</a></li>
+            <li><a href="{% url 'all authors' %}">List Authors</a></li>
+            <li><a href="{% url 'add books' %}">Add Book</a></li>
+            <li><a href="{% url 'borrow list' %}">Borrows</a></li>
+        </ul>
+        {% endif %}
+    </nav>
+</header>
+
+{% block page_content %}
+{% endblock %}
+
+</body>
+</html>

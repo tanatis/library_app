@@ -1,16 +1,17 @@
 {% extends 'base.html' %}
 {% block page_content %}
-    <div>
+    <div class="lib-form">
+    <h2>Edit your profile</h2>
         <form action="{% url 'profile edit' pk=object.pk %}" method="post" enctype="multipart/form-data">
             {% for field in form %}
-                <div>
+                <div class="lib-form-line">
                     {{ field.errors }}
                     {{ field.label_tag }}
                     {{ field }}
                 </div>
             {% endfor %}
+            <button class="lib-form-btn">Edit profile</button>
             {% csrf_token %}
-            <button>Edit profile</button>
         </form>
     </div>
 {% endblock %}

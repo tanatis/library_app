@@ -3,19 +3,17 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import generic as views
 
-from library_app.author.forms import AuthorEditForm, AuthorDeleteForm
+from library_app.author.forms import AuthorEditForm, AuthorDeleteForm, AuthorCreateForm
 from library_app.author.models import Author
 from library_app.core.functionality import get_creator_user
-
-
-def author_create(request):
-    return render(request, 'author/author_create.html')
 
 
 class AuthorCreateView(views.CreateView):
     model = Author
     template_name = 'author/author_create.html'
-    fields = ('name', 'birth_year', 'death_year', 'nationality', 'bio', 'picture')
+    form_class = AuthorCreateForm
+    #fields = ('name', 'bio', 'birth_year', 'death_year', 'nationality', 'picture',)
+
     success_url = reverse_lazy('index')
 
     # Access only to Creators

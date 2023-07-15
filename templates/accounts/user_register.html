@@ -1,17 +1,17 @@
 {% extends 'base.html' %}
 {% block page_content %}
-    <div>
+    <div class="lib-form">
+    <h2>Registration form</h2>
         <form action="{% url 'user register' %}" method="post">
             {% for field in form %}
-                <div>
+                <div class="lib-form-line">
                     {{ field.errors }}
-                    {{ field.label_tag }}
                     {{ field }}
                     {{ field.help_text }}
                 </div>
             {% endfor %}
             {% csrf_token %}
-            <button>Register</button>
+            <button class="lib-form-btn">Register</button>
         </form>
     </div>
 

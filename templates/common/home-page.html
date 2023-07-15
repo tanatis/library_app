@@ -1,18 +1,29 @@
 {% extends 'base.html' %}
 {% block page_content %}
-    <h1>Home Page</h1>
-    {{ request.user }}
-    <ul class="book-list">
-        {% for book in books %}
-            <li>
-                <a href="{% url 'details books' pk=book.pk %}">{{ book.title }}
-                    <img src="/media/{{ book.cover }}" alt="{{ book.title }} by {{ book.author }}" width="200">
-                </a>
-                <p>descr: {{ book.description }}</p>
-                <p>genre: {{ book.genre }}</p>
-                <p>author: {{ book.author }}</p>
-                <p>available: {{ book.availability }}</p>
-            </li>
-        {% endfor %}
-    </ul>
+
+    <div class="index-search-div">
+        <form class="searchbar" method="get" action="{% url 'index' %}">
+            {{ search_form }}
+            {% csrf_token %}
+            <button class="search-btn">
+                search
+            </button>
+        </form>
+    </div>
+
+    <div class="books-list">
+        <div class="products-grid grid">
+            {% for book in books %}
+                <figure class="product-style">
+                    <a href="{% url 'details books' pk=book.pk %}">
+                        <img src="/media/{{ book.cover }}" alt="{{ book.title }}" class="product-item">
+                        <figcaption>
+                            <h3>{{ book.title }}</h3>
+                            <p>{{ book.author }}</p>
+                        </figcaption>
+                    </a>
+                </figure>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}

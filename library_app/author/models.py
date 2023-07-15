@@ -30,10 +30,9 @@ class Author(models.Model):
         validators=(author_birth_death_year_validator,),
     )
 
-    death_year = models.PositiveIntegerField(
+    death_year = models.IntegerField(
         blank=True,
         null=True,
-        validators=(author_birth_death_year_validator,),
     )
 
     picture = models.ImageField(

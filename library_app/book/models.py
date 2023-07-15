@@ -69,12 +69,13 @@ class Book(models.Model):
         null=False,
     )
 
+    borrowed_count = models.IntegerField(
+        default=0,
+        blank=False,
+        null=False,
+    )
+
     author = models.ForeignKey(
         Author,
         on_delete=models.CASCADE,
     )
-
-    # publisher = models.ForeignKey(
-    #     Publisher,
-    #     on_delete=models.CASCADE,
-    # )

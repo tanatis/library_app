@@ -1,12 +1,42 @@
 {% extends 'base.html' %}
+{% load placeholders %}
 {% block page_content %}
 
-    <div>
-    <h1>Edit Author:</h1>
+    <div class="lib-form">
+    <h2>Edit Author:</h2>
         <form action="{% url 'author edit' pk=author.pk %}" method="post">
-            {{ form.as_p }}
+            <div class="lib-form-line">
+                {{ form.name.errors }}
+                {{ form.name.label_tag }}
+                {{ form.name|placeholder:'Author name:'|form_field_class:'lib-form-input' }}
+            </div>
+            <div class="lib-form-line">
+                {{ form.bio.errors }}
+                {{ form.bio.label_tag }}
+                {{ form.bio|placeholder:'Author bio:'|form_field_class:'lib-form-input' }}
+            </div>
+            <div class="lib-form-line">
+                {{ form.nationality.errors }}
+                {{ form.nationality.label_tag }}
+                {{ form.nationality|form_field_class:'lib-form-input' }}
+            </div>
+            <div class="lib-form-line">
+                {{ form.birth_year.errors }}
+                {{ form.birth_year.label_tag }}
+                {{ form.birth_year|placeholder:'Author birth year:'|form_field_class:'lib-form-input' }}
+            </div>
+            <div class="lib-form-line">
+                {{ form.death_year.errors }}
+                {{ form.death_year.label_tag }}
+                {{ form.death_year|placeholder:'Author death year:'|form_field_class:'lib-form-input' }}
+            </div>
+            <div class="lib-form-line">
+                {{ form.picture.errors }}
+                {{ form.picture.label_tag }}
+                {{ form.picture|placeholder:'Author death year:'|form_field_class:'lib-form-input' }}
+            </div>
+            <button class="lib-form-btn" type="submit">Edit author</button>
             {% csrf_token %}
-            <button type="submit">Edit author</button>
         </form>
     </div>
 {% endblock %}

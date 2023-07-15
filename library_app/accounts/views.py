@@ -5,7 +5,7 @@ from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
 from django.views import generic as views
 
-from library_app.accounts.forms import AppUserCreationForm
+from library_app.accounts.forms import AppUserCreationForm, AppUserLoginForm, ProfileEditForm
 from library_app.accounts.models import Profile
 from library_app.borrow.models import Borrow
 
@@ -33,6 +33,7 @@ class SignUpView(views.CreateView):
 
 class SignInView(auth_views.LoginView):
     template_name = 'accounts/user_login.html'
+    form_class = AppUserLoginForm
 
 
 class SignOutView(auth_views.LogoutView):
@@ -65,7 +66,8 @@ class ProfileDetailsView(views.DetailView):
 class ProfileEditView(UserPassesTestMixin, views.UpdateView):
     template_name = 'profile/profile_edit.html'
     model = Profile
-    fields = ('first_name', 'last_name', 'gender', 'profile_image',)
+    form_class = ProfileEditForm
+    #fields = ('first_name', 'last_name', 'gender', 'profile_image',)
 
     def get_success_url(self):
         return reverse_lazy('profile details', kwargs={'pk': self.object.pk})
