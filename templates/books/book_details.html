@@ -29,12 +29,8 @@
                         <p><span>Pages:</span> {{ book.number_of_pages }}</p>
                         <p><span>Description:</span> {{ book.description }}</p>
                         {% if request.user.is_staff %}
-                            <a href="{% url 'edit books' pk=book.pk %}">
-                                <button class="button">Edit book</button>
-                            </a>
-                            <a href="{% url 'delete books' pk=book.pk %}">
-                                <button class="button">Delete book</button>
-                            </a>
+                            <a href="{% url 'edit books' pk=book.pk %}"><button class="button">Edit book</button></a>
+                            <a href="{% url 'delete books' pk=book.pk %}"><button class="button">Delete book</button></a>
                         {% else %}
                             {% if book.availability > 0 %}
                                 <a href="{% url 'borrow book' book_pk=book.pk %}">

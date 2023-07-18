@@ -1,9 +1,22 @@
 {% extends 'base.html' %}
 {% block page_content %}
-    <ul>
-        All Authors:
-        {% for author in authors %}
-            <li><a href="{% url 'author details' pk=author.pk %}">{{ author.name }}</a> - {{ author.book_set.count }} books</li>
-        {% endfor %}
-    </ul>
+
+    <section class="lib-authors-list">
+            <h2>All Authors:</h2>
+            <div class="lib-authors-list-wrapper">
+                    {% for author in authors %}
+                    <div class="lib-authors-list-card">
+                        <figure>
+                            <a href="{% url 'author details' pk=author.pk %}"><img src="/media/{{ author.picture}}" alt="{{ author.name }}" class="member-image"></a>
+                        </figure>
+
+                        <div class="member-details text-center">
+                            <h4>{{ author.name}}</h4>
+                            <p>{{ author.book_set.count }} books</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+            </div>
+    </section>
+
 {% endblock %}

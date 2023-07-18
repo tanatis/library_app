@@ -1,17 +1,36 @@
 {% extends 'base.html' %}
 {% block page_content %}
 
+    {#  old  #}
+{#    <div class="index-search-div">#}
+{#        <form class="searchbar" method="get" action="{% url 'index' %}">#}
+{#            {{ search_form }}#}
+{#            {% csrf_token %}#}
+{#            <button class="search-btn">#}
+{#                search#}
+{#            </button>#}
+{#        </form>#}
+{#    </div>#}
+
     <div class="index-search-div">
         <form class="searchbar" method="get" action="{% url 'index' %}">
-            {{ search_form }}
-            {% csrf_token %}
-            <button class="search-btn">
-                search
-            </button>
+
+            {{ search_form.search_by }}
+            <div class="aaaaaaaa">
+                {{ search_form.query }}
+                {% csrf_token %}
+                <button class="search-btn">search</button>
+            </div>
         </form>
     </div>
 
+
+
     <div class="books-list">
+        {% if books %}
+        <div class="lib-sorting">Sort by: <a href="?sort_by=id">last added</a> | <a href="?sort_by=title">title</a> | <a
+                href="?sort_by=author">author</a></div>
+        {% endif %}
         <div class="products-grid grid">
             {% for book in books %}
                 <figure class="product-style">

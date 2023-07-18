@@ -27,10 +27,13 @@ class AuthorCreateView(views.CreateView):
 @user_passes_test(get_creator_user, login_url='restricted')
 def author_edit(request, pk):
     author = Author.objects.filter(pk=pk).get()
-    form = AuthorEditForm(request.POST or None, instance=author)
-    if form.is_valid():
-        form.save()
-        return redirect('author details', pk=author.pk)
+    if request.method == 'GET':
+        form = AuthorEditForm(instance=author)
+    else:
+        form = AuthorEditForm(request.POST, request.FILES, instance=author)
+        if form.is_valid():
+            form.save()
+            return redirect('author details', pk=author.pk)
     context = {
         'form': form,
         'author': author,

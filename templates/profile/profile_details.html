@@ -48,4 +48,19 @@
         </div>
     </div>
 
+    <div class="books-list">
+    <h2>Last viewed books:</h2>
+        <div class="products-grid grid">
+            {% for book in last_viewed_books %}
+                <figure class="product-style">
+                    <a href="{% url 'details books' pk=book.pk %}">
+                        <img src="/media/{{ book.cover }}" alt="{{ book.title }}" class="product-item">
+                    </a>
+                </figure>
+            {% empty %}
+            <h3>No books viewed yet</h3>
+            {% endfor %}
+        </div>
+    </div>
+
 {% endblock %}

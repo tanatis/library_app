@@ -1,12 +1,15 @@
 {% extends 'base.html' %}
 {% block page_content %}
-<div>
-    <form action="{% url 'author delete' pk=author.pk %}" method="post">
-        <p>By deleting {{ author.name }} you will also delete all his/her books</p>
-        <h2>Are you sure you want to delete "{{ author.name }}" ?</h2>
-        {{ form }}
-        {% csrf_token %}
-        <button type="submit">Delete author</button>
-    </form>
-</div>
+
+    <div class="lib-delete-book">
+        <form action="{% url 'author delete' pk=author.pk %}" method="post">
+            <h2>Are you sure you want to delete "{{ author.name }}" ?</h2>
+            <img src="/media/{{ author.picture }}" alt="{{ author.name }}"><br>
+            {{ form }}
+            <h3>By deleting this author you will also delete all his/her books</h3>
+            <button class="lib-form-btn" type="submit">Delete author</button>
+            {% csrf_token %}
+        </form>
+    </div>
+
 {% endblock %}

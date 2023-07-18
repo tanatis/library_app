@@ -39,9 +39,10 @@
                 <div class="row admin-menu">
                     <div class="col-md-6">
                         <div class="right-element admin-menu">
-                            <a {% if request.path == add_author %}class="active"{% endif %} href="{% url 'author create' %}">Add Author</a>
-                            <a {% if request.path == list_authors %}class="active"{% endif %} href="{% url 'all authors' %}">List Authors</a>
-                            <a {% if request.path == add_book %}class="active"{% endif %} href="{% url 'add books' %}">Add Book</a>
+                            <a {% if request.path == add_author %}class="active"{% endif %}
+                               href="{% url 'author create' %}">Add Author</a>
+                            <a {% if request.path == add_book %}class="active"{% endif %} href="{% url 'add books' %}">Add
+                                Book</a>
                             <a {% if request.path == borrows %}class="active"{% endif %} href="{% url 'borrow list' %}">Borrows</a>
                         </div><!--top-right-->
                     </div>
@@ -63,7 +64,11 @@
                     <nav id="navbar">
                         <div class="main-menu stellarnav">
                             <ul class="menu-list">
-                                <li class="menu-item {% if request.path == index %}active{% endif %}"><a href="{% url 'index' %}" data-effect="Home">Home</a></li>
+                                <li class="menu-item {% if request.path == index %}active{% endif %}"><a
+                                        href="{% url 'index' %}" data-effect="Home">Home</a></li>
+                                <li class="menu-item {% if request.path == list_authors %}active{% endif %}">
+                                    <a href="{% url 'all authors' %}">Authors</a>
+                                </li>
                                 {% if request.user.is_authenticated %}
                                     <li class="menu-item {% if request.path == profile_details %}active{% endif %}">
                                         {% if not request.user.profile.first_name or not request.user.profile.last_name or not request.user.profile.gender %}

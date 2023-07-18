@@ -4,7 +4,7 @@
 
     <div class="lib-form">
     <h2>Edit Author:</h2>
-        <form action="{% url 'author edit' pk=author.pk %}" method="post">
+        <form action="{% url 'author edit' pk=author.pk %}" method="post" enctype="multipart/form-data">
             <div class="lib-form-line">
                 {{ form.name.errors }}
                 {{ form.name.label_tag }}

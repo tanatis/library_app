@@ -55,7 +55,7 @@ def borrow_book(request, book_pk):
 
     if book.availability > 0:
         borrow_date = timezone.now().date()
-        return_date = borrow_date + timezone.timedelta(days=7)  # Assuming a 7-day borrowing period
+        return_date = borrow_date + timezone.timedelta(days=1)  # Assuming a 7-day borrowing period
         if request.method == 'GET':
             form = BorrowBookForm()
         else:

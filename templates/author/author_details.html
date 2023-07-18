@@ -1,21 +1,48 @@
 {% extends 'base.html' %}
 {% block page_content %}
 
-    <ul>
-        <li>Name: {{ author.name }}</li>
-        <li>Nationality: {{ author.nationality }}</li>
-        <li>Bio: {{ author.bio }}</li>
-        {% if request.user.is_authenticated and request.user.is_staff %}
-            <li>
-                <a href="{% url 'author edit' pk=author.pk %}">Edit</a> | <a href="{% url 'author delete' pk=author.pk %}">Delete</a>
-            </li>
-        {% endif %}
-    </ul>
+    <div class="bg-sand">
+        <div class="container">
+            <div class="lib-author-details-wrapper">
+                <div class="author-details-left">
+                    <img src="/media/{{ author.picture }}" alt="{{ author.name }}">
+                </div>
 
-    {% for book in author_books %}
-        {{ book.title }}
-    {% endfor %}
-    {#  if stuff  #}
+                <div class="author-details-right">
+                    <div class="author-details">
+                        <p><span>Name:</span> {{ author.name }}</p>
+                        <p>{{ author.birth_year }} - {% if author.death_year %}{{ author.death_year }}{% endif %}</p>
+                        <p><span>Nationality:</span> {{ author.nationality }}</p>
+                        <p><span>Biography:</span> {{ author.bio }}</p>
+                        {% if request.user.is_authenticated and request.user.is_staff %}
+                            <p>
+                                <a href="{% url 'author edit' pk=author.pk %}"><button class="button">Edit</button></a>
+                                <a href="{% url 'author delete' pk=author.pk %}"><button class="button">Delete</button></a>
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    {# endif #}
+    <div class="books-list">
+    <h2>List of {{ author.name }}'s books:</h2>
+        <div class="products-grid grid">
+            {% for book in author_books %}
+                <figure class="product-style">
+                    <a href="{% url 'details books' pk=book.pk %}">
+                        <img src="/media/{{ book.cover }}" alt="{{ book.title }}" class="product-item">
+                        <figcaption>
+                            <h3>{{ book.title }}</h3>
+                            <p>{{ book.author }}</p>
+                        </figcaption>
+                    </a>
+                </figure>
+            {% empty %}
+            <h3>No books added for {{ author.name }}</h3>
+            {% endfor %}
+        </div>
+    </div>
+
 {% endblock %}

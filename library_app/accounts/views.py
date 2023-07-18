@@ -7,6 +7,7 @@ from django.views import generic as views
 
 from library_app.accounts.forms import AppUserCreationForm, AppUserLoginForm, ProfileEditForm
 from library_app.accounts.models import Profile
+from library_app.book.models import Book
 from library_app.borrow.models import Borrow
 
 UserModel = get_user_model()
@@ -49,10 +50,12 @@ class ProfileDetailsView(views.DetailView):
         context['is_owner'] = self.request.user == self.object
         context['pk'] = self.object.pk
 
-        # TODO: without get_object_or_404
         profile = get_object_or_404(Profile, pk=self.kwargs['pk'])
         borrowed_books = Borrow.objects.filter(user=profile.user)
         context['borrowed_books'] = borrowed_books
+
+        last_viewed_books_ids = self.request.session.get('last_viewed_books', [])
+        context['last_viewed_books'] = Book.objects.filter(pk__in=last_viewed_books_ids)
 
         return context
 

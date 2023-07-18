@@ -16,6 +16,13 @@ def book_details(request, pk):
     book = Book.objects.filter(pk=pk).get()
     comment_form = CommentForm()
 
+    last_viewed_books = request.session.get('last_viewed_books', [])
+    if book.id not in last_viewed_books:
+        last_viewed_books.append(book.pk)
+    #start_index = max(0, len(last_viewed_books) - 3)
+    #request.session['last_viewed_books'] = last_viewed_books[start_index:]
+    request.session['last_viewed_books'] = last_viewed_books[:-4:-1]
+
     context = {
         'book': book,
         'book_pk': book.pk,
