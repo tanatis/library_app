@@ -1,5 +1,6 @@
+from django.conf import settings
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import HttpResponse
+from django.core.mail import send_mail
 from django.utils import timezone
 from django.contrib import messages
 
@@ -7,7 +8,7 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import render, redirect
 
 from library_app.book.models import Book
-from library_app.borrow.forms import BorrowBookForm
+from library_app.borrow.forms import BorrowBookForm, SearchUserForm
 from library_app.borrow.models import Borrow
 from library_app.core.functionality import get_creator_user
 
@@ -18,7 +19,26 @@ UserModel = get_user_model()
 @user_passes_test(get_creator_user, login_url='restricted')
 def borrow_list(request):
     borrows = Borrow.objects.all()
-    return render(request, 'common/borrow_list.html', {'borrows': borrows})
+
+    search_user_form = SearchUserForm(request.GET)
+    search_pattern = None
+    if search_user_form.is_valid():
+        search_pattern = search_user_form.cleaned_data['user']
+
+    if search_pattern:
+        borrows = borrows.filter(user__username__icontains=search_pattern)
+
+    # ##############################################
+
+    today_date = timezone.now().date()
+    for borrow in borrows:
+        borrow.is_overdue = today_date > borrow.return_date
+
+    context = {
+        'borrows': borrows,
+        'form': search_user_form,
+    }
+    return render(request, 'common/borrow_list.html', context)
 
 
 # def borrow_book(request, book_pk):
@@ -54,8 +74,9 @@ def borrow_book(request, book_pk):
     book = Book.objects.filter(pk=book_pk).get()
 
     if book.availability > 0:
+        days_to_return = 1
         borrow_date = timezone.now().date()
-        return_date = borrow_date + timezone.timedelta(days=1)  # Assuming a 7-day borrowing period
+        return_date = borrow_date + timezone.timedelta(days=days_to_return)
         if request.method == 'GET':
             form = BorrowBookForm()
         else:
@@ -80,6 +101,7 @@ def borrow_book(request, book_pk):
                 book.save()
 
                 return redirect('index')
+
         context = {
             'form': form,
             'book': book,
@@ -101,4 +123,18 @@ def borrow_delete(request, pk):
     book.borrowed_count -= 1
     book.save()
     borrow.delete()
+    return redirect('borrow list')
+
+
+def send_email_reminder(request, pk):
+    borrow = Borrow.objects.filter(pk=pk).get()
+    email = borrow.user.email
+    book = borrow.book.title
+    date = borrow.return_date
+    send_mail(
+        subject='reminder',
+        message=f'Kindly reminding you that the last day to return the book "{book}" was {date}.\n Please make sure you return it ASAP.',
+        from_email=settings.EMAIL_HOST_USER,
+        recipient_list=(email,)
+    )
     return redirect('borrow list')

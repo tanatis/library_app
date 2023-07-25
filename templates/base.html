@@ -3,7 +3,9 @@
 {% url 'author create' as add_author %}
 {% url 'all authors' as list_authors %}
 {% url 'add books' as add_book %}
-{#{% url 'borrow list' as borrows %}#}
+{% url 'profile details' pk=pk as profile %}
+{% url 'user register' as register %}
+{% url 'user login' as login %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,14 +24,10 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/vendor.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 
-    <!-- script
-    ================================================== -->
-    <script src="{% static 'js/modernizr.js' %}"></script>
-
 </head>
 
 <body>
-
+<div class="page-wrapper">
 
 <div id="header-wrap">
     {% if user.is_staff %}
@@ -43,8 +41,8 @@
                                href="{% url 'author create' %}">Add Author</a>
                             <a {% if request.path == add_book %}class="active"{% endif %} href="{% url 'add books' %}">Add
                                 Book</a>
-                            <a {% if request.path == borrows %}class="active"{% endif %} href="{% url 'borrow list' %}">Borrows</a>
-                        </div><!--top-right-->
+                            <a {% if request.path == borrows.value %}class="active"{% endif %} href="{% url 'borrow list' %}">Borrows</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -70,7 +68,7 @@
                                     <a href="{% url 'all authors' %}">Authors</a>
                                 </li>
                                 {% if request.user.is_authenticated %}
-                                    <li class="menu-item {% if request.path == profile_details %}active{% endif %}">
+                                    <li class="menu-item {% if request.path == profile %}active{% endif %}">
                                         {% if not request.user.profile.first_name or not request.user.profile.last_name or not request.user.profile.gender %}
                                             <span class="lib-profile">Complete your profile!</span>
                                         {% endif %}
@@ -78,8 +76,8 @@
                                     </li>
                                     <li class="menu-item"><a href="{% url 'user logout' %}">Logout</a></li>
                                 {% else %}
-                                    <li class="menu-item"><a href="{% url 'user register' %}">Register</a></li>
-                                    <li class="menu-item"><a href="{% url 'user login' %}">Login</a></li>
+                                    <li class="menu-item {% if request.path == register %}active{% endif %}"><a href="{% url 'user register' %}">Register</a></li>
+                                    <li class="menu-item {% if request.path == login %}active{% endif %}"><a href="{% url 'user login' %}">Login</a></li>
                                 {% endif %}
                             </ul>
                             <div class="hamburger">
@@ -140,6 +138,6 @@
 <script src="{% static 'js/jquery-1.11.0.min.js' %}"></script>
 <script src="{% static 'js/plugins.js' %}"></script>
 <script src="{% static 'js/script.js' %}"></script>
-
+</div>
 </body>
 </html>	

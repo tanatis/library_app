@@ -1,11 +1,14 @@
+from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404, render
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
+from django.utils import timezone
 from django.views import generic as views
 
-from library_app.accounts.forms import AppUserCreationForm, AppUserLoginForm, ProfileEditForm
+from library_app.accounts.forms import AppUserCreationForm, AppUserLoginForm, ProfileEditForm, AppUserDeleteForm
 from library_app.accounts.models import Profile
 from library_app.book.models import Book
 from library_app.borrow.models import Borrow
@@ -41,6 +44,14 @@ class SignOutView(auth_views.LogoutView):
     pass
 
 
+class AppUserChangePassword(auth_views.PasswordChangeView):
+    template_name = 'accounts/change-password.html'
+
+    def get_success_url(self):
+        pk = self.request.user.pk
+        return reverse_lazy('profile details', args=[pk])
+
+
 class ProfileDetailsView(views.DetailView):
     template_name = 'profile/profile_details.html'
     model = Profile
@@ -52,6 +63,11 @@ class ProfileDetailsView(views.DetailView):
 
         profile = get_object_or_404(Profile, pk=self.kwargs['pk'])
         borrowed_books = Borrow.objects.filter(user=profile.user)
+
+        today_date = timezone.now().date()
+        for book in borrowed_books:
+            book.is_overdue = today_date > book.return_date
+
         context['borrowed_books'] = borrowed_books
 
         last_viewed_books_ids = self.request.session.get('last_viewed_books', [])
@@ -60,17 +76,10 @@ class ProfileDetailsView(views.DetailView):
         return context
 
 
-    # def profile_complete(self):
-    #     if self.object.first_name == '':
-    #         return False
-    #     return True
-
-
 class ProfileEditView(UserPassesTestMixin, views.UpdateView):
     template_name = 'profile/profile_edit.html'
     model = Profile
     form_class = ProfileEditForm
-    #fields = ('first_name', 'last_name', 'gender', 'profile_image',)
 
     def get_success_url(self):
         return reverse_lazy('profile details', kwargs={'pk': self.object.pk})
@@ -79,3 +88,29 @@ class ProfileEditView(UserPassesTestMixin, views.UpdateView):
     def test_func(self):
         profile = self.get_object()
         return self.request.user.is_authenticated and self.request.user == profile.user
+
+
+@login_required
+def user_delete(request, pk):
+    user = UserModel.objects.filter(pk=pk).get()
+
+    if request.user != user:
+        messages.warning(request, 'You can only delete your own account!')
+        return redirect('restricted')
+
+    if request.method == 'GET':
+        form = AppUserDeleteForm(instance=user)
+    else:
+        form = AppUserDeleteForm(request.POST, instance=user)
+        if form.is_valid():
+            if Borrow.objects.filter(user=user).exists():
+                messages.warning(request, "You cannot delete your account until you return all borrowed books.")
+                return redirect('error')
+            form.save()
+            return redirect('index')
+
+    context = {
+        'form': form,
+        'user': user,
+    }
+    return render(request, 'accounts/user_delete.html', context)

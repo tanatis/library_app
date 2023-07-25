@@ -16,10 +16,12 @@
                 <div class="profile-details-right">
                     <div class="profile-details">
                         <p><span>Username:</span> {{ object.user.username }}</p>
-                        <p><span>Name:</span> {{ object.first_name }} {{ object.last_name }}</p>
-                        <p><span>Gender:</span> {{ object.gender }}</p>
+                        <p><span>Name:</span> {% if object.first_name and object.last_name %}{{ object.first_name }} {{ object.last_name }}{% endif %}</p>
+                        <p><span>Gender:</span> {% if object.gender %}{{ object.gender }}{% endif %}</p>
                         {% if object.pk == request.user.pk %}
                         <p><a href="{% url 'profile edit' pk=object.pk %}">Edit profile</a></p>
+                        <p><a href="{% url 'change password' %}">Change password</a></p>
+                        <p><a href="{% url 'delete account' pk=user.pk %}">Delete account</a></p>
                         {% endif %}
                     </div>
                 </div>
@@ -28,17 +30,23 @@
         </div>
     </section>
 
-    <div class="books-list">
+    <div class="books-list-wrapper">
     <h2>List of borrowed books:</h2>
-        <div class="products-grid grid">
+        <div class="books-list">
             {% for borrow in borrowed_books %}
-                <figure class="product-style">
+                <figure class="book-card">
                     <a href="{% url 'details books' pk=borrow.book.pk %}">
                         <img src="/media/{{ borrow.book.cover }}" alt="{{ borrow.title }}" class="product-item">
                         <figcaption>
-                            <h3>{{ borrow.title }}</h3>
-                            <p>{{ borrow.author }}</p>
-                            <p>Return before {{ borrow.return_date }}</p>
+                            {% if object.pk == request.user.pk %}
+                            <p>
+                                {% if borrow.is_overdue %}
+                                    <span style="color: red;">You are overdue in returning this book.</span>
+                                {% else %}
+                                    Return before {{ borrow.return_date }}
+                                {% endif %}
+                            </p>
+                            {% endif %}
                         </figcaption>
                     </a>
                 </figure>
@@ -48,11 +56,11 @@
         </div>
     </div>
 
-    <div class="books-list">
+    <div class="books-list-wrapper">
     <h2>Last viewed books:</h2>
-        <div class="products-grid grid">
+        <div class="books-list">
             {% for book in last_viewed_books %}
-                <figure class="product-style">
+                <figure class="book-card">
                     <a href="{% url 'details books' pk=book.pk %}">
                         <img src="/media/{{ book.cover }}" alt="{{ book.title }}" class="product-item">
                     </a>

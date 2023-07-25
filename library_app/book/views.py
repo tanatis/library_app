@@ -21,7 +21,7 @@ def book_details(request, pk):
         last_viewed_books.append(book.pk)
     #start_index = max(0, len(last_viewed_books) - 3)
     #request.session['last_viewed_books'] = last_viewed_books[start_index:]
-    request.session['last_viewed_books'] = last_viewed_books[:-4:-1]
+    request.session['last_viewed_books'] = last_viewed_books[:-5:-1]
 
     context = {
         'book': book,
@@ -68,6 +68,8 @@ def book_edit(request, pk):
     return render(request, 'books/book_edit.html', context)
 
 
+@login_required
+@user_passes_test(get_creator_user, login_url='restricted')
 def book_delete(request, pk):
     book = Book.objects.filter(pk=pk).get()
     if book.borrowed_count == 0:
@@ -79,9 +81,9 @@ def book_delete(request, pk):
                 form.save()
                 return redirect('index')
     else:
-        messages.warning(request, "Book cannot be delete before it is returned")
-        return redirect('restricted')
-        #return redirect('restricted')  # TODO: change redirect url
+        messages.warning(request, "Book cannot be deleted before it is returned")
+        return redirect('error')
+
     context = {
         'book': book,
         'form': form,

@@ -26,11 +26,11 @@
         </div>
     </div>
 
-    <div class="books-list">
+    <div class="books-list-wrapper">
     <h2>List of {{ author.name }}'s books:</h2>
-        <div class="products-grid grid">
+        <div class="books-list">
             {% for book in author_books %}
-                <figure class="product-style">
+                <figure class="book-card">
                     <a href="{% url 'details books' pk=book.pk %}">
                         <img src="/media/{{ book.cover }}" alt="{{ book.title }}" class="product-item">
                         <figcaption>

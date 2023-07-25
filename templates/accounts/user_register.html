@@ -37,6 +37,7 @@
             {% csrf_token %}
             <button class="lib-form-btn">Register</button>
         </form>
+        Already registered? <a href="{% url 'user login' %}">Login here</a>
     </div>
 
 {% endblock %}

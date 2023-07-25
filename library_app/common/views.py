@@ -51,3 +51,7 @@ def index(request):
 
 def restricted(request):
     return render(request, 'common/restricted.html')
+
+
+def error_page(request):
+    return render(request, 'common/error.html')

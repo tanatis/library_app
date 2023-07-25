@@ -1,19 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block page_content %}
-    {#    {% if request.user.is_staff %}#}
-    {#    <span><a href="{% url 'edit books' pk=book.pk %}">Edit</a></span>#}
-    {#    {% endif %}#}
-    {#    <h1>{{ book.title }}</h1>#}
-    {#    <h2>Author: {{ book.author }}</h2>#}
-    {#    <h2>Genre: {{ book.genre }}</h2>#}
-    {#    <p>{{ book.description }}</p>#}
-    {#    {% if book.availability > 0 %}#}
-    {#        <a href="{% url 'borrow book' book_pk=book.pk %}">Borrow book</a>#}
-    {#    {% else %}#}
-    {#        Not available#}
-    {#    {% endif %}#}
-    {#   #########################################################################   #}
     <section class="bg-sand">
         <div class="container">
             <div class="lib-book-details-wrapper">
@@ -24,13 +11,18 @@
                 <div class="book-details-right">
                     <div class="book-details">
                         <h1>{{ book.title }}</h1>
-                        <p><span>Autor:</span> <a href="{% url 'author details' pk=book.author.pk %}">{{ book.author }}</a></p>
+                        <p><span>Autor:</span> <a
+                                href="{% url 'author details' pk=book.author.pk %}">{{ book.author }}</a></p>
                         <p><span>Genre:</span> {{ book.genre }}</p>
                         <p><span>Pages:</span> {{ book.number_of_pages }}</p>
                         <p><span>Description:</span> {{ book.description }}</p>
                         {% if request.user.is_staff %}
-                            <a href="{% url 'edit books' pk=book.pk %}"><button class="button">Edit book</button></a>
-                            <a href="{% url 'delete books' pk=book.pk %}"><button class="button">Delete book</button></a>
+                            <a href="{% url 'edit books' pk=book.pk %}">
+                                <button class="button">Edit book</button>
+                            </a>
+                            <a href="{% url 'delete books' pk=book.pk %}">
+                                <button class="button">Delete book</button>
+                            </a>
                         {% else %}
                             {% if book.availability > 0 %}
                                 <a href="{% url 'borrow book' book_pk=book.pk %}">
@@ -47,28 +39,50 @@
             {#   Comments section below     #}
             <div class="comments">
                 <div class="comment-form">
+
                     <div class="lib-form">
-                        <form method="post" action="{% url 'add comment' book_id=book.pk %}">
+                        {% if request.user.is_authenticated %}
+                            <form method="post" action="{% url 'add comment' book_id=book.pk %}">
+                                <div class="lib-form-line">
+                                    {{ comment_form.content }}
+                                </div>
+                                <button class="lib-form-btn" type="submit">Post</button>
+                                {% csrf_token %}
+                            </form>
+                        {% else %}
                             <div class="lib-form-line">
-                                {{ comment_form.content }}
+                                <a href="{% url 'user login' %}">
+                                    <button class="lib-form-btn">Login to post comments</button>
+                                </a>
                             </div>
-                            <button class="lib-form-btn" type="submit">Post</button>
-                            {% csrf_token %}
-                        </form>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="comment-list">
                     {% for comment in comments %}
                         <div class="comment-row">
                             <div class="comment-thumb">
-                                {% if comment.user.profile.profile_image %}
-                                    <img src="/media/{{ comment.user.profile.profile_image }}" alt="{{ comment.user.username }}">
+                                {% if comment.user.pk %}
+                                    {% if comment.user.profile.profile_image %}
+                                        <img src="/media/{{ comment.user.profile.profile_image }}"
+                                             alt="{{ comment.user.username }}">
+                                    {% else %}
+                                        <img src="{% static 'default-profile-picture.jpg' %}"
+                                             alt="{{ comment.user.username }}">
+                                    {% endif %}
                                 {% else %}
-                                    <img src="{% static 'default-profile-picture.jpg' %}" alt="{{ comment.user.username }}">
+                                    <img src="{% static 'default-profile-picture.jpg' %}">
                                 {% endif %}
                             </div>
                             <div class="comment-body">
-                                <div class="comment-header">{{ comment.date_time_of_publication|date:'d M Y' }} by <a href="{% url 'profile details' pk=comment.user.pk %}">{{ comment.user.username }}</a></div>
+                                <div class="comment-header">
+                                    {{ comment.date_time_of_publication|date:'d M Y' }} by
+                                    {% if comment.user.pk %}
+                                        <a href="{% url 'profile details' pk=comment.user.pk %}">{{ comment.user.username }}</a>
+                                    {% else %}
+                                        Deleted User
+                                    {% endif %}
+                                </div>
                                 <div class="comment-text">{{ comment.content }}</div>
                             </div>
                         </div>

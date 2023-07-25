@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -7,17 +8,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-hqltl*#^!vbl$x_xyy2wgh_z@ed)n&2err^rn#9)_$ol2z6*6x'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+##SECRET_KEY = 'django-insecure-hqltl*#^!vbl$x_xyy2wgh_z@ed)n&2err^rn#9)_$ol2z6*6x'
+SECRET_KEY = os.getenv('SECRET_KEY', None)
+print(SECRET_KEY)
 
-ALLOWED_HOSTS = [
-    '127.0.0.1',
-    'localhost',
-]
+##DEBUG = True
+DEBUG = bool(int(os.getenv('DEBUG')))
 
+## ALLOWED_HOSTS = [
+##     '127.0.0.1',
+##     'localhost',
+## ]
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(' ')
 
 # Application definition
 
@@ -31,7 +34,7 @@ INSTALLED_APPS = [
 
     'django_countries',
 
-    'library_app.accounts',
+    'library_app.accounts.apps.AccountsConfig',
     'library_app.common',
     'library_app.author',
     'library_app.book',
@@ -74,10 +77,20 @@ WSGI_APPLICATION = 'library_app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+## DATABASES = {
+##     'default': {
+##         'ENGINE': 'django.db.backends.sqlite3',
+##         'NAME': BASE_DIR / 'db.sqlite3',
+##     }
+## }
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv('DB_NAME'),
+        "USER": os.getenv('DB_USER'),
+        "PASSWORD": os.getenv('DB_PASSWORD'),
+        "HOST": os.getenv('DB_HOST'),
+        "PORT": os.getenv('DB_PORT'),
     }
 }
 
@@ -142,3 +155,15 @@ AUTH_USER_MODEL = 'accounts.AppUser'
 LOGIN_REDIRECT_URL = 'index'
 
 LOGOUT_REDIRECT_URL = 'user login'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+## EMAIL_HOST = 'smtp.gmail.com'
+## EMAIL_USE_TLS = True
+## EMAIL_PORT = 587
+## EMAIL_HOST_USER = 'motorolashopeu@gmail.com'
+## EMAIL_HOST_PASSWORD = 'dtnrkhshjjouemuq'
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_USE_TLS = bool(int(os.getenv('EMAIL_USE_TLS')))
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')

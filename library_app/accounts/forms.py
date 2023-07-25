@@ -66,3 +66,14 @@ class ProfileEditForm(forms.ModelForm):
             'gender': '',
             'profile_image': 'Upload profile picture',
         }
+
+
+class AppUserDeleteForm(forms.ModelForm):
+    class Meta:
+        model = UserModel
+        fields = ()
+
+    def save(self, commit=True):
+        if commit:
+            self.instance.delete()
+        return self.instance

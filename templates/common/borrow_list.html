@@ -1,14 +1,53 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block page_content %}
 
-
-    <div>
-    {% if borrows %}
-        {% for borrow in borrows %}
-            <p>{{ borrow.book.title }} by {{ borrow.user.username }} - {{ borrow.return_date }} | <a href="{% url 'borrow delete' pk=borrow.pk %}">Mark returned</a></p>
-        {% endfor %}
-    {% else %}
-        <p>There are no books borrowed!</p>
-    {% endif %}
+    <div class="search-wrapper">
+        <div class="search-form">
+            <form action="{% url 'borrow list' %}" method="get">
+                {{ form }}
+                <button class="search-btn">Search</button>
+                {% csrf_token %}
+            </form>
+        </div>
     </div>
+
+
+
+    <div class="books-list-wrapper">
+        <div class="borrow-list-wrapper">
+            {% if borrows %}
+                {% for borrow in borrows %}
+                    <div class="borrow-book">
+                        <p>user: <strong><a
+                                href="{% url 'profile details' pk=borrow.user.pk %}">{{ borrow.user.username }}</a></strong>
+                        </p>
+                        <p>return date:
+                            {% if borrow.is_overdue %}
+                                <span>overdue</span>
+                                <a href="{% url 'borrow reminder' pk=borrow.pk %}">
+                                    <img class="send-email" src="{% static 'send-email-icon.png' %}"
+                                         alt="Send email notification">
+                                </a>
+                            {% else %}
+                                <strong>{{ borrow.return_date }}</strong>
+                            {% endif %}
+                        </p>
+                        <img src="/media/{{ borrow.book.cover }}" alt="{{ borrow.book.title }}">
+                        <p>
+                            <strong>
+                                <a href="{% url 'borrow delete' pk=borrow.pk %}">
+                                    <img class="mark-returned" src="{% static 'green-tick.png' %}" alt="mark returned">
+                                    Mark returned
+                                </a>
+                            </strong>
+                        </p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>There are no books borrowed!</p>
+            {% endif %}
+        </div>
+    </div>
+
 {% endblock %}

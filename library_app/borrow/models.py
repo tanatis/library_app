@@ -11,6 +11,15 @@ class Borrow(models.Model):
 
     return_date = models.DateField()
 
-    user = models.ForeignKey(UserModel, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        UserModel,
+        on_delete=models.CASCADE
+    )
 
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    book = models.ForeignKey(
+        Book,
+        on_delete=models.CASCADE
+    )
+
+    class Meta:
+        ordering = ['return_date']

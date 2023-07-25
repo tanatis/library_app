@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block page_content %}
+    <div class="restricted">
+        <h1>Error</h1>
+
+        {% if messages %}
+            <div class="alert alert-warning">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+
+{% endblock %}
