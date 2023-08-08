@@ -26,19 +26,19 @@ services:
     volumes:
       - ./postgresql:/var/lib/postgresql/data
 
-  nginx:
-    image: nginx
-    ports:
-      - "80:80"
-      - "443:443"
-    depends_on:
-      - web
-    volumes:
-      - /tmp/library_app/static:/home/app/web/staticfiles
-      - /tmp/library_app/media:/home/app/web/media
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./nginx/logs:/var/log/nginx
-      - ./certbot/www:/var/www/certbot/:ro
-      - ./certbot/conf/:/etc/nginx/ssl/:ro
-    links:
-      - web
+#  nginx:
+#    image: nginx
+#    ports:
+#      - "80:80"
+#      - "443:443"
+#    depends_on:
+#      - web
+#    volumes:
+#      - /tmp/library_app/static:/home/app/web/staticfiles
+#      - /tmp/library_app/media:/home/app/web/media
+#      - ./nginx/conf.d:/etc/nginx/conf.d
+#      - ./nginx/logs:/var/log/nginx
+#      - ./certbot/www:/var/www/certbot/:ro
+#      - ./certbot/conf/:/etc/nginx/ssl/:ro
+#    links:
+#      - web

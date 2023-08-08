@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 ##SECRET_KEY = 'django-insecure-hqltl*#^!vbl$x_xyy2wgh_z@ed)n&2err^rn#9)_$ol2z6*6x'
 SECRET_KEY = os.getenv('SECRET_KEY', None)
-print(SECRET_KEY)
+#print(SECRET_KEY)
 
 ##DEBUG = True
 DEBUG = bool(int(os.getenv('DEBUG')))
@@ -77,22 +77,22 @@ WSGI_APPLICATION = 'library_app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-## DATABASES = {
-##     'default': {
-##         'ENGINE': 'django.db.backends.sqlite3',
-##         'NAME': BASE_DIR / 'db.sqlite3',
-##     }
-## }
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv('DB_NAME'),
-        "USER": os.getenv('DB_USER'),
-        "PASSWORD": os.getenv('DB_PASSWORD'),
-        "HOST": os.getenv('DB_HOST'),
-        "PORT": os.getenv('DB_PORT'),
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": os.getenv('DB_NAME'),
+#         "USER": os.getenv('DB_USER'),
+#         "PASSWORD": os.getenv('DB_PASSWORD'),
+#         "HOST": os.getenv('DB_HOST'),
+#         "PORT": os.getenv('DB_PORT'),
+#     }
+# }
 
 CACHES = {
     'default': {
