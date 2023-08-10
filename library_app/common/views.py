@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.core.cache import cache
 from library_app.book.models import Book
@@ -5,22 +6,12 @@ from library_app.common.forms import SearchForm
 
 
 def index(request):
-    #books = Book.objects.all()
-    # кешираме само книгите, а не цялото вю
+    # cache only the books but not the whole view
     if not cache.get('books'):
         cache.set('books', Book.objects.all(), 60)
     books = cache.get('books')
 
-    # search_form = SearchForm(request.GET)
-    # search_pattern = None
-    # if search_form.is_valid():
-    #     search_pattern = search_form.cleaned_data['book']
-    #
-    # if search_pattern:
-    #     books = books.filter(title__icontains=search_pattern)
-
     search_form = SearchForm(request.GET)
-    #search_criteria = 'title'  # Default search criteria
 
     if search_form.is_valid():
         search_criteria = search_form.cleaned_data['search_by']
@@ -42,9 +33,14 @@ def index(request):
         # By default, sort by ID if no sorting option is selected
         books = books.order_by('-id')
 
+    paginator = Paginator(books, 8)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     context = {
         'books': books,
         'search_form': search_form,
+        'page_obj': page_obj,
     }
     return render(request, 'common/home-page.html', context)
 
