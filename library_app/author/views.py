@@ -17,7 +17,7 @@ class AuthorCreateView(views.CreateView):
     success_url = reverse_lazy('index')
 
     def dispatch(self, request, *args, **kwargs):
-        if not self.request.user.groups.filter(name='Creator').exists():
+        if not self.request.user.groups.filter(name='Library Admin').exists():
             messages.error(request, 'You are not allowed to add authors')
             return redirect('restricted')
         return super().dispatch(request, *args, **kwargs)
