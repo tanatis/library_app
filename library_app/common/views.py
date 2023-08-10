@@ -2,6 +2,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.core.cache import cache
 from library_app.book.models import Book
+from library_app.comments.models import Comment
 from library_app.common.forms import SearchForm
 
 
@@ -11,8 +12,8 @@ def index(request):
         cache.set('books', Book.objects.all(), 60)
     books = cache.get('books')
 
+    # Search
     search_form = SearchForm(request.GET)
-
     if search_form.is_valid():
         search_criteria = search_form.cleaned_data['search_by']
         query = search_form.cleaned_data['query']
@@ -23,24 +24,28 @@ def index(request):
             elif search_criteria == 'author':
                 books = books.filter(author__name__icontains=query)
 
+    # Sorting
     sort_by = request.GET.get('sort_by')
     if sort_by == 'title':
         books = books.order_by('title')
     elif sort_by == 'author':
         books = books.order_by('author')
-    # Add more sorting options here if needed
     else:
-        # By default, sort by ID if no sorting option is selected
         books = books.order_by('-id')
 
+    # Pagination
     paginator = Paginator(books, 8)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+
+    # Comments count
+    book_comments_counts = {book: Comment.objects.filter(to_book=book).count() for book in books}
 
     context = {
         'books': books,
         'search_form': search_form,
         'page_obj': page_obj,
+        'book_comments_counts': book_comments_counts,
     }
     return render(request, 'common/home-page.html', context)
 
