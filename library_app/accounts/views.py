@@ -8,7 +8,7 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import generic as views
 
-from library_app.accounts.forms import AppUserCreationForm, AppUserLoginForm, ProfileEditForm, AppUserDeleteForm
+from library_app.accounts.forms import AppUserCreationForm, ProfileEditForm, AppUserDeleteForm
 from library_app.accounts.models import Profile
 from library_app.book.models import Book
 from library_app.borrow.models import Borrow
@@ -22,22 +22,20 @@ class SignUpView(views.CreateView):
     success_url = reverse_lazy('user login')
     form_class = AppUserCreationForm
 
-    # автоматично създава празен profile вързан към новосъздадения user
     def form_valid(self, form):
         response = super().form_valid(form)
         Profile.objects.create(user=self.object)
         return response
 
-    # prevent logged users from seeing the registration form
     def dispatch(self, request, *args, **kwargs):
         if self.request.user.is_authenticated:
-            return redirect('index')
+            messages.error(request, 'You already have an account. No need to register again.')
+            return redirect('error')
         return super().dispatch(request, *args, **kwargs)
 
 
 class SignInView(auth_views.LoginView):
     template_name = 'accounts/user_login.html'
-    form_class = AppUserLoginForm
 
 
 class SignOutView(auth_views.LogoutView):
@@ -76,7 +74,7 @@ class ProfileDetailsView(views.DetailView):
         return context
 
 
-class ProfileEditView(UserPassesTestMixin, views.UpdateView):
+class ProfileEditView(views.UpdateView):
     template_name = 'profile/profile_edit.html'
     model = Profile
     form_class = ProfileEditForm
@@ -84,10 +82,12 @@ class ProfileEditView(UserPassesTestMixin, views.UpdateView):
     def get_success_url(self):
         return reverse_lazy('profile details', kwargs={'pk': self.object.pk})
 
-    # Prevent accessing edit URL if not owner
-    def test_func(self):
+    def dispatch(self, request, *args, **kwargs):
         profile = self.get_object()
-        return self.request.user.is_authenticated and self.request.user == profile.user
+        if self.request.user != profile.user:
+            messages.error(request, 'You can only edit your own profile')
+            return redirect('restricted')
+        return super().dispatch(request, *args, **kwargs)
 
 
 @login_required

@@ -2,35 +2,28 @@
 {% load placeholders %}
 {% block page_content %}
     <div class="lib-form">
-    <h2>Edit your profile</h2>
+        <h2>Edit your profile</h2>
         <form action="{% url 'profile edit' pk=object.pk %}" method="post" enctype="multipart/form-data">
-{#            {% for field in form %}#}
-{#                <div class="lib-form-line">#}
-{#                    {{ field.errors }}#}
-{#                    {{ field.label_tag }}#}
-{#                    {{ field }}#}
-{#                </div>#}
-{#            {% endfor %}#}
             <div class="lib-form-line">
-                    {{ form.first_name.errors }}
-                    {{ form.first_name.label_tag }}
-                    {{ form.first_name|placeholder:'First name'|form_field_class:'lib-form-input' }}
-                </div>
+                {{ form.first_name.errors }}
+                {{ form.first_name.label_tag }}
+                {{ form.first_name|placeholder:'First name'|form_field_class:'lib-form-input' }}
+            </div>
             <div class="lib-form-line">
-                    {{ form.last_name.errors }}
-                    {{ form.last_name.label_tag }}
-                    {{ form.last_name|placeholder:'Last name'|form_field_class:'lib-form-input' }}
-                </div>
+                {{ form.last_name.errors }}
+                {{ form.last_name.label_tag }}
+                {{ form.last_name|placeholder:'Last name'|form_field_class:'lib-form-input' }}
+            </div>
             <div class="lib-form-line">
-                    {{ form.gender.errors }}
-                    {{ form.gender.label_tag }}
-                    {{ form.gender|placeholder:'Gender'|form_field_class:'lib-form-input' }}
-                </div>
+                {{ form.gender.errors }}
+                {{ form.gender.label_tag }}
+                {{ form.gender|placeholder:'Gender'|form_field_class:'lib-form-input' }}
+            </div>
             <div class="lib-form-line">
-                    {{ form.profile_image.errors }}
-                    {{ form.profile_image.label_tag }}
-                    {{ form.profile_image|form_field_class:'lib-form-input' }}
-                </div>
+                {{ form.profile_image.errors }}
+                {{ form.profile_image.label_tag }}
+                {{ form.profile_image|form_field_class:'lib-form-input' }}
+            </div>
             <button class="lib-form-btn">Edit profile</button>
             {% csrf_token %}
         </form>

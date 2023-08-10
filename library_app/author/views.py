@@ -1,7 +1,8 @@
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import generic as views
+from django.contrib import messages
 
 from library_app.author.forms import AuthorEditForm, AuthorDeleteForm, AuthorCreateForm
 from library_app.author.models import Author
@@ -12,20 +13,22 @@ class AuthorCreateView(views.CreateView):
     model = Author
     template_name = 'author/author_create.html'
     form_class = AuthorCreateForm
-    #fields = ('name', 'bio', 'birth_year', 'death_year', 'nationality', 'picture',)
 
     success_url = reverse_lazy('index')
 
-    # Access only to Creators
     def dispatch(self, request, *args, **kwargs):
         if not self.request.user.groups.filter(name='Creator').exists():
+            messages.error(request, 'You are not allowed to add authors')
             return redirect('restricted')
         return super().dispatch(request, *args, **kwargs)
 
 
 @login_required
-@user_passes_test(get_creator_user, login_url='restricted')
 def author_edit(request, pk):
+    if not get_creator_user(request.user):
+        messages.error(request, 'You are not allowed to edit authors')
+        return redirect('restricted')
+
     author = Author.objects.filter(pk=pk).get()
     if request.method == 'GET':
         form = AuthorEditForm(instance=author)
@@ -50,7 +53,12 @@ def author_details(request, pk):
     return render(request, 'author/author_details.html', context)
 
 
+@login_required
 def author_delete(request, pk):
+    if not get_creator_user(request.user):
+        messages.error(request, 'You are not allowed to delete authors')
+        return redirect('restricted')
+
     author = Author.objects.filter(pk=pk).get()
     form = AuthorDeleteForm(request.POST or None, instance=author)
     if form.is_valid():

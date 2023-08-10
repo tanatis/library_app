@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Book Store</title>
+    <title>Library App Project</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,6 +37,7 @@
                 <div class="row admin-menu">
                     <div class="col-md-6">
                         <div class="right-element admin-menu">
+                            Welcome {{ request.user.username }}
                             <a {% if request.path == add_author %}class="active"{% endif %}
                                href="{% url 'author create' %}">Add Author</a>
                             <a {% if request.path == add_book %}class="active"{% endif %} href="{% url 'add books' %}">Add
@@ -47,7 +48,6 @@
                 </div>
             </div>
         </div>
-        <!-- end admin content-->
     {% endif %}
 
     <header id="header">
@@ -92,13 +92,11 @@
         </div>
     </header>
 
-</div><!--header-wrap-->
-{# ########################################################################################################### #}
+</div>
 
 {% block page_content %}
 {% endblock %}
 
-{# ########################################################################################################### #}
 <div id="footer-bottom">
     <div class="container">
         <div class="row">
@@ -106,8 +104,7 @@
                 <div class="copyright">
                     <div class="row">
                         <div class="col-md-6">
-                            <p>© 2022 All rights reserved. Free HTML Template by <a
-                                    href="https://www.templatesjungle.com/" target="_blank">TemplatesJungle</a></p>
+                            <p>© 2023 Library app project.</p>
                         </div>
                         <div class="col-md-6">
                             <div class="social-links align-right">
@@ -121,16 +118,13 @@
                                     <li>
                                         <a href="#"><i class="icon icon-youtube-play"></i></a>
                                     </li>
-                                    <li>
-                                        <a href="#"><i class="icon icon-behance-square"></i></a>
-                                    </li>
                                 </ul>
                             </div>
                         </div>
 
                     </div>
-                </div><!--grid-->
-            </div><!--footer-bottom-content-->
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -16,8 +16,12 @@ UserModel = get_user_model()
 
 
 @login_required
-@user_passes_test(get_creator_user, login_url='restricted')
+#@user_passes_test(get_creator_user, login_url='restricted')
 def borrow_list(request):
+    if not get_creator_user(request.user):
+        messages.error(request, "You don't have permissions to access this page")
+        return redirect('restricted')
+
     borrows = Borrow.objects.all()
 
     search_user_form = SearchUserForm(request.GET)
@@ -28,7 +32,7 @@ def borrow_list(request):
     if search_pattern:
         borrows = borrows.filter(user__username__icontains=search_pattern)
 
-    # ##############################################
+    ###############################################
 
     today_date = timezone.now().date()
     for borrow in borrows:
@@ -40,34 +44,6 @@ def borrow_list(request):
     }
     return render(request, 'common/borrow_list.html', context)
 
-
-# def borrow_book(request, book_pk):
-#     book = Book.objects.filter(pk=book_pk).get()
-#
-#     if book.availability > 0:
-#         borrow_date = timezone.now().date()
-#         return_date = borrow_date + timezone.timedelta(days=7)  # Assuming a 7-day borrowing period
-#
-#         # Create a new Borrow instance
-#         new_borrow = Borrow.objects.create(
-#             borrow_date=borrow_date,
-#             return_date=return_date,
-#             user=request.user,
-#             book=book
-#         )
-#         book.availability -= 1
-#         book.save()
-#
-#         context = {
-#             'book': book,
-#             'return_date': return_date,
-#             'author': book.author,
-#             'new_borrow': new_borrow,
-#         }
-#         return render(request, 'common/borrow.html', context)
-#
-#     else:
-#         return redirect('index')
 
 @login_required
 def borrow_book(request, book_pk):
@@ -87,7 +63,7 @@ def borrow_book(request, book_pk):
                 # Check if the user has already borrowed the same book
                 if Borrow.objects.filter(user=user, book=book, return_date__gte=borrow_date).exists():
                     messages.warning(request, "You have already borrowed this book.")
-                    return redirect('restricted')
+                    return redirect('error')
 
                 new_borrow = form.save(commit=False)
                 new_borrow.borrow_date = borrow_date
@@ -114,8 +90,11 @@ def borrow_book(request, book_pk):
 
 
 @login_required
-@user_passes_test(get_creator_user, login_url='restricted')
 def borrow_delete(request, pk):
+    if not get_creator_user(request.user):
+        messages.error(request, "You don't have permissions to access this page")
+        return redirect('restricted')
+
     borrow = Borrow.objects.filter(pk=pk).get()
 
     book = borrow.book
@@ -126,7 +105,12 @@ def borrow_delete(request, pk):
     return redirect('borrow list')
 
 
+@login_required
 def send_email_reminder(request, pk):
+    if not get_creator_user(request.user):
+        messages.error(request, "You don't have permissions to access this page")
+        return redirect('restricted')
+
     borrow = Borrow.objects.filter(pk=pk).get()
     email = borrow.user.email
     book = borrow.book.title

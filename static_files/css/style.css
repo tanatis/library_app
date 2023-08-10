@@ -1195,7 +1195,7 @@ img.post-image {
 /* -- Top Menu Part
 --------------------------------------------------------------*/
 .top-content {
-    padding: 20px 0;
+    padding: 10px 0;
     border-bottom: 1px solid #E0E0E0;
 }
 .social-links ul {
@@ -1215,7 +1215,7 @@ img.post-image {
 }
 .top-content a {
     color: #555;
-    text-decoration: none;
+    text-decoration: underline;
 }
 .top-content .right-element {
     text-align: right;

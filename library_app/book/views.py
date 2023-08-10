@@ -60,7 +60,7 @@ def book_edit(request, pk):
         form = BookEditForm(request.POST, request.FILES, instance=book)
         if form.is_valid():
             form.save()
-            return redirect('all books')
+            return redirect('index')
     context = {
         'form': form,
         'book': book,
