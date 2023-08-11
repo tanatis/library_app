@@ -29,7 +29,7 @@ class Author(models.Model):
         validators=(author_birth_death_year_validator,),
     )
 
-    death_year = models.IntegerField(
+    death_year = models.PositiveIntegerField(
         blank=True,
         null=True,
         validators=(author_birth_death_year_validator,),

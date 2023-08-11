@@ -9,7 +9,7 @@ from library_app.core.functionality import get_creator_user
 
 
 def list_books(request):
-    return render(request, 'books/book_list.html')
+    return redirect('index')
 
 
 def book_details(request, pk):
@@ -19,8 +19,6 @@ def book_details(request, pk):
     last_viewed_books = request.session.get('last_viewed_books', [])
     if book.id not in last_viewed_books:
         last_viewed_books.append(book.pk)
-    #start_index = max(0, len(last_viewed_books) - 3)
-    #request.session['last_viewed_books'] = last_viewed_books[start_index:]
     request.session['last_viewed_books'] = last_viewed_books[:-5:-1]
 
     context = {
@@ -82,7 +80,7 @@ def book_delete(request, pk):
                 return redirect('index')
     else:
         messages.warning(request, "Book cannot be deleted before it is returned")
-        return redirect('error')
+        return redirect(request.META['HTTP_REFERER'])
 
     context = {
         'book': book,

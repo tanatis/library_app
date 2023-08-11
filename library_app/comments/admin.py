@@ -16,4 +16,3 @@ class CommentsAdmin(admin.ModelAdmin):
     @staticmethod
     def get_username(obj):
         return obj.user if obj.user else 'DELETED USER'
-

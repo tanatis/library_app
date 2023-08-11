@@ -37,7 +37,7 @@ class ProfileEditForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('first_name', 'last_name', 'gender', 'profile_image',)
-        labels ={
+        labels = {
             'first_name': '',
             'last_name': '',
             'gender': '',

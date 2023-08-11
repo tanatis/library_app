@@ -63,7 +63,7 @@ def borrow_book(request, book_pk):
                 # Check if the user has already borrowed the same book
                 if Borrow.objects.filter(user=user, book=book, return_date__gte=borrow_date).exists():
                     messages.warning(request, "You have already borrowed this book.")
-                    return redirect('error')
+                    return redirect(request.META['HTTP_REFERER'])
 
                 new_borrow = form.save(commit=False)
                 new_borrow.borrow_date = borrow_date

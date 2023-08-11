@@ -36,6 +36,7 @@ form h3 {text-transform: none;}
 .books-pagination a {text-decoration: none;}
 .books-pagination ul {list-style: none; display: flex; justify-content: center; gap: 1rem;}
 .books-pagination ul li {background: var(--accent-color); color: #fff; width: 40px; height: 40px; text-align: center; line-height: 35px; font-size: 25px; border-radius: 4px;}
+.books-pagination .current-page {color: black;}
 
 .lib-book-details-wrapper {display: flex; width: 60%; margin: 0 auto; padding: 4em 0;}
 .book-details p {font-weight: bold; margin-bottom: 1rem;}
@@ -105,7 +106,8 @@ label[for=picture-clear_id] {display: inline;}
 .lib-authors-list-card img {width: 100%; max-width: 300px;}
 
 .restricted {text-align: center;}
-.restricted .alert {color: #ff0000; font-weight: bold;}
+.restricted .alert,
+.alert-warning {color: #ff0000; font-weight: bold;}
 
 .borrow-list-wrapper {display: flex; flex-wrap: wrap; justify-content: space-between;}
 .borrow-book {width: 15%; margin-bottom: 5rem;}

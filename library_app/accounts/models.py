@@ -20,13 +20,11 @@ class AppUser(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):
         blank=False,
         null=False,
         validators=(MinLengthValidator(3), username_validator),
-        #error_messages='This username is already taken'
     )
     email = models.EmailField(
         unique=True,
         null=False,
         blank=False,
-        #error_messages='User with this email already exists.'
     )
 
     is_staff = models.BooleanField(
@@ -40,8 +38,6 @@ class AppUser(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):
     date_joined = models.DateTimeField(
         default=timezone.now
     )
-
-    # profile -> video 3:02:30
 
 
 class Gender(Enum):

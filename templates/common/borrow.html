@@ -6,10 +6,17 @@
             <a href="{% url 'author details' pk=author.pk %}">{{ book.author }}</a>
         </p>
         <img src="/media/{{ book.cover }}" alt="{{ book.title }}">
+        <p>Please make sure you return the book before {{ return_date }}</p>
+        {% if messages %}
+            <div class="alert alert-warning">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
         <form action="{% url 'borrow book' book_pk=book.pk %}" method="post">
             {{ form }}
             {% csrf_token %}
-            <p>Please make sure you return the book before {{ return_date }}</p>
             <button class="lib-form-btn" type="submit">Borrow</button>
         </form>
         

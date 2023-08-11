@@ -1,7 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import UserPassesTestMixin
 from django.shortcuts import redirect, get_object_or_404, render
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
@@ -105,7 +104,7 @@ def user_delete(request, pk):
         if form.is_valid():
             if Borrow.objects.filter(user=user).exists():
                 messages.warning(request, "You cannot delete your account until you return all borrowed books.")
-                return redirect('error')
+                return redirect(request.path_info)
             form.save()
             return redirect('index')
 
